@@ -1,5 +1,6 @@
 package com.plan.service;
 
+import com.plan.Enum.PaymentStatus;
 import com.plan.Enum.PlanStatus;
 import com.plan.dto.ApiPageResponse;
 import com.plan.dto.ApiResponse;
@@ -39,7 +40,9 @@ public class PlanPurchageService {
         Double finalPrice = 0.0;
         Double discountAmount = 0.0;
 
-
+        if(!planPurchageRepository.findByTransactionId(dto.getTransactionId()).isEmpty()){
+            throw new RuntimeException("transactionId is already exist");
+        }
         if(dto.getCouponId()!=null){
             boolean couponExist = (planPurchageRepository.existByClientIdAndCouponId(dto.getClientId(),dto.getCouponId())>0)?true:false;
             if(couponExist){
@@ -129,9 +132,11 @@ public class PlanPurchageService {
         PlanPurchage planPurchage = planPurchageRepository.findById(planPurchaseId)
                 .orElseThrow(() -> new ResourceNotFoundException("PlanPurchase not found with ID: " + planPurchaseId));
 
-//        planPurchage.setCode(dto.getCode());
-//        planPurchage.setDiscountDescription(dto.getDiscountDescription());
-//        planPurchage.setStatus(dto.getStatus());
+        if(dto.getTransactionId()!=null){
+            planPurchage.setPaymentStatus(PaymentStatus.SUCCESS);
+            planPurchage.setPlanStatus(PlanStatus.RUNNING);
+        }
+
 
         PlanPurchage updatedPlanPurchage = planPurchageRepository.save(planPurchage);
         return new ApiResponse<>(true, "PlanPurchage updated successfully!", planPurchageMapper.toDto(updatedPlanPurchage));

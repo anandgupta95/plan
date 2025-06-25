@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface PlanPurchageRepository extends JpaRepository<PlanPurchage,Long> {
     Page<PlanPurchage> findByCreatedAtBetween(LocalDateTime fromDateTime, LocalDateTime toDateTime, Pageable pageable);
 
-    Optional<Transaction> findByTransactionId(Long transactionId);
+    Optional<PlanPurchage> findByTransactionId(Long transactionId);
     @Query(value = "select Count(*)>0 from planpurchases where client_id = :clientId and coupon_id = :couponId", nativeQuery = true)
     Long existByClientIdAndCouponId(@Param("clientId") Long clientId, @Param("couponId") Long couponId);
 
