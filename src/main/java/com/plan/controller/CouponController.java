@@ -4,6 +4,8 @@ import com.plan.dto.ApiPageResponse;
 import com.plan.dto.ApiResponse;
 import com.plan.dto.CouponDto;
 import com.plan.service.CouponService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -15,6 +17,7 @@ import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/coupons")
+@Tag(name = "coupon management", description = "operation related to coupon")
 public class CouponController {
 
     private final CouponService couponService;
@@ -24,12 +27,14 @@ public class CouponController {
     }
 
     // Create Coupon
+    @Operation(summary = "Create a new coupon")
     @PostMapping("/create-coupon")
     public ResponseEntity<ApiResponse<CouponDto>> createCoupon(@RequestBody CouponDto dto) {
         return ResponseEntity.ok(couponService.createCoupon(dto));
     }
 
     // Get All Coupons (Pagination, Sorting)
+    @Operation(summary = "fetch all coupon using pagination ")
     @GetMapping("/all")
     public ResponseEntity<ApiPageResponse<CouponDto>> getAllCoupons(
             @RequestParam(defaultValue = "0") int page,
@@ -47,18 +52,21 @@ public class CouponController {
     }
 
     // Get Coupon by ID
+    @Operation(summary = "fetch one coupon")
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<CouponDto>> getCouponById(@PathVariable Long id) {
         return ResponseEntity.ok(couponService.getCouponById(id));
     }
 
     // Update Coupon
+    @Operation(summary = "update coupon")
     @PutMapping("/update-coupon/{id}")
     public ResponseEntity<ApiResponse<CouponDto>> updateCoupon(@PathVariable Long id, @RequestBody CouponDto dto) {
         return ResponseEntity.ok(couponService.updateCoupon(id, dto));
     }
 
     // Delete Coupon
+    @Operation(summary = "delete coupon")
     @DeleteMapping("/delete-coupon/{id}")
     public ResponseEntity<ApiResponse<String>> deleteCoupon(@PathVariable Long id) {
         return ResponseEntity.ok(couponService.deleteCoupon(id));
